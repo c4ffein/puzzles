@@ -1,3 +1,8 @@
+# Copyright (c) c4ffein
+# Check https://github.com/c4ffein/puzzles/blob/main/LICENSE for license
+# Check https://github.com/c4ffein/puzzles/blob/main/README.md before judging code quality
+
+
 import math
 
 

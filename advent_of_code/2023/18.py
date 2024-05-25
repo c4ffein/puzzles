@@ -1,3 +1,8 @@
+# Copyright (c) c4ffein
+# Check https://github.com/c4ffein/puzzles/blob/main/LICENSE for license
+# Check https://github.com/c4ffein/puzzles/blob/main/README.md before judging code quality
+
+
 with open("input.txt") as f:
     real_input = f.read().split("\n")[:-1]
 
