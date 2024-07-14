@@ -66,7 +66,7 @@ And the [Anniversary Edition](https://store.steampowered.com/app/499180/Braid_An
 
 ### [The Talos Principle 2](https://store.steampowered.com/app/835960/The_Talos_Principle_2/)
 First person, lasers, colored lasers, tools that do stuff with lasers, teleporters, bumpers...
-Very well made, not really hard, I'd really recommend and I still hope for a harder DLC.
+Very well made, not really hard, I'd really recommend and I still hope for a harder DLC - update, the DLC is really good.
 They introduced many game mechanics but didn't mix them as much as they could
 (that's what the DLC for the first one did, no new mechanic, but it built far more complex puzzles with what was introduced).
 
