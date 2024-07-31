@@ -13,7 +13,7 @@ You sometimes need to focus on some skills that you don't use that much, but mat
 
 You can never be sure of how transferable all of those skills are, but if learning a new language can improve your memory, maybe even the weirdest puzzles provide some form of general improvement of your cognitive capabilities.
 
-For the coding puzzles, it is even more straightforward : for example, I only did the 2023 edition of the Advent of Code for now, months late, so I can't talk about any edition, but most of the second parts were there for you to find the tricks that will bring you huge performance gains.
+For the coding puzzles, it is even more straightforward : for example, I only did the 2023 edition of the Advent of Code for now, months late, so I can't talk about any other edition, but most of the second parts were there for you to find the tricks that will bring you huge performance gains.
 
 Maybe those are not as complex as the real world problems, but it's still a good way to build intuition. Maybe you just need the simplest recursive implementation and a cache, be it Python's `dict` in your solution, or Redis in the real world. Maybe that's not enough, maybe you need to fully reconsider the way your functions pass data to each other. Maybe you can find a cycle somewhere and get a decent estimation of a future value. That's the kind of thinking involved with software engineering, and that you don't necessarily train enough while actually doing software engineering, as you're supposed to have meetings, backlog refinements, pipeline runnings, all those things that need to be combined with your problem-solving abilities for you to provide value for a company.
 
