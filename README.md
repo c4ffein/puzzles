@@ -68,7 +68,7 @@ And the [Anniversary Edition](https://store.steampowered.com/app/499180/Braid_An
 First person, lasers, colored lasers, tools that do stuff with lasers, teleporters, bumpers...
 Very well made, not really hard, I'd really recommend and I still hope for a harder DLC - update, the DLC is really good.
 They introduced many game mechanics but didn't mix them as much as they could
-(that's what the DLC for the first one did, no new mechanic, but it built far more complex puzzles with what was introduced).
+(that's what the DLC for the first one did, no new mechanic, but instead built far more complex puzzles with what was already introduced).
 
 The philosophy in this game is cheap, there is nothing you'll find in it that you can't come up with by yourself.
 And the NPCs won't stop talking.
