@@ -52,4 +52,4 @@ Had to grind a bit to get Python fluency again, I really enjoyed that one for th
 Not really puzzles, more like easy exercises to help you get fluent with your language of choice. At least can be done locally, and may provide the best difficulty curve for beginners.
 
 ## Other recommendations if you enjoy those coding puzzles
-May seem weird for me to link this here, but [those are the games and puzzles I would like to find out if I didn't know about](https://github.com/c4ffein/writings/blob/main/puzzles/puzzles.md), and I guess if you read this you may enjoy those too.
+May seem weird for me to link this here, but [those are the games and puzzles I would like to find out if I didn't know about](https://github.com/c4ffein/writings/blob/main/s/puzzles/puzzles.md), and I guess if you read this you may enjoy those too.
