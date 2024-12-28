@@ -1,3 +1,7 @@
+# Copyright (c) c4ffein
+# Check https://github.com/c4ffein/puzzles/blob/main/LICENSE for license
+# Check https://github.com/c4ffein/puzzles/blob/main/README.md before judging code quality
+
 from sys import exit
 from math import inf
 from pprint import pprint as pp
