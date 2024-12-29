@@ -8,32 +8,19 @@ from enum import Enum
 
 
 Ops = Enum("Ops", ["AND", "OR", "XOR"])
-op_name_to_value = {e.name: e.value for e in Ops}
-op_value_to_name = {e.value: e.name for e in Ops}
-ops_dict = {
-    Ops.AND.value: lambda a, b: (a & b),
-    Ops.OR.value: lambda a, b: (a | b),
-    Ops.XOR.value: lambda a, b: (a ^ b),
-}
+compute_op = lambda op, a, b: (a & b) if op == Ops.AND.value else a | b if op == Ops.OR.value else a ^ b
 
 
 def load(ci):
     starters_s, operations_s = ci.split("\n\n")
     starters = {k: int(v) for k, v in [l.split(": ") for l in starters_s.split("\n")]}
-    key_to_operations = {}
-    operations = []
-    for l in operations_s.split("\n"):
-        a, op, b, _, r = l.split(" ")
-        operations.append([op_name_to_value[op], a, b, r])
-        if a not in key_to_operations: key_to_operations[a] = []
-        if b not in key_to_operations: key_to_operations[b] = []
-        key_to_operations[a].append(operations[-1])
-        key_to_operations[b].append(operations[-1])
-    return starters, operations, key_to_operations
+    operations = [[Ops[op].value, a, b, r] for a, op, b, _, r in [l.split(" ") for l in operations_s.split("\n")]]
+    return starters, operations
 
 
 def sol0(ci):
-    values, operations, key_to_operations = load(ci)
+    values, ops = load(ci)
+    key_to_operations = {k: [op for op in ops if k in op[1:3]] for k in {op[i] for op in ops for i in [1, 2]}}
     keys_to_treat = set(values)
     while keys_to_treat:
         value = keys_to_treat.pop()
@@ -41,7 +28,7 @@ def sol0(ci):
         if current_list is None: continue
         for op, a, b, r in current_list:
             if a in values and b in values and r not in values:
-                values[r] = ops_dict[op](values[a], values[b])
+                values[r] = compute_op(op, values[a], values[b])
                 keys_to_treat.add(r)
         del key_to_operations[value]
     return int(
@@ -60,78 +47,53 @@ class Node:
             and ((self.a == node.a and self.b == node.b) or (self.a == node.b and self.b == node.a))
         )
 
-    def find_discrepancies(self, node):
-        gn = lambda n: n if isinstance(n, str) else n.op_name
-        if isinstance(node, str): return [self.op_name]
-        if self == node: return []
-        if self.operand != node.operand:
-            return [self.op_name]
-        if self.a == node.a:
-            if self.b == node.b: return []
-            return self.b.find_discrepancies(node.b) if isinstance(self.b, Node) else [gn(self.b)]
-        if self.b == node.b: return self.a.find_discrepancies(node.a) if isinstance(self.a, Node) else [gn(self.a)]
-        if self.a == node.b:
-            if self.b == node.a: return []
-            return self.b.find_discrepancies(node.a) if isinstance(self.b, Node) else [gn(self.b)]
-        if self.b == node.a: return self.a.find_discrepancies(node.b) if isinstance(self.b, Node) else [gn(self.b)]
-        return [self.op_name+node.op_name]
-
-    def __str__(self):
-        return f"{self.op_name}:=({self.a} {op_value_to_name[self.operand]} {self.b})"
-
-make_and = lambda a, b: Node("", Ops.AND.value, a, b)
-make_or  = lambda a, b: Node("", Ops.OR.value, a, b)
-make_xor = lambda a, b: Node("", Ops.XOR.value, a, b)
+    def find_discrepancies(self, node):  # Always find the highest, may be a problem if you have 2 switches in the same,
+        gn = lambda n: n if isinstance(n, str) else n.op_name # shouldn't be a problem due to the wires architecture tho
+        if isinstance(node, str): return self.op_name
+        if self == node: return None
+        if self.operand != node.operand: return self.op_name
+        if any((self.a, self.b) == (a, b) for a, b in ((node.a, node.b), (node.b, node.a))): return
+        if self.a == node.a: return self.b.find_discrepancies(node.b) if isinstance(self.b, Node) else gn(self.b)
+        if self.b == node.b: return self.a.find_discrepancies(node.a) if isinstance(self.a, Node) else gn(self.a)
+        if self.a == node.b: return self.b.find_discrepancies(node.a) if isinstance(self.b, Node) else gn(self.b)
+        if self.b == node.a: return self.a.find_discrepancies(node.b) if isinstance(self.b, Node) else gn(self.b)
+        return self.op_name
 
 
-# z00 = X00
-# z01 = X01 XOR A00
-# z02 = X02 XOR ( A01 OR ( X01 AND A00 ) )
-# z03 = X03 XOR ( A02 OR ( X02 AND ( A01 OR ( X01 AND A00 ) ) ) )
-# z04 = X04 XOR ( A03 OR ( X03 AND ( A02 OR ( X02 AND ( A01 OR ( X01 AND A00 ) ) ) ) ) )
-# z05 = X05 XOR ( A04 OR ( X04 AND ( A03 OR ( X03 AND ( A02 OR ( X02 AND ( A01 OR ( X01 AND A00 ) ) ) ) ) ) )  )
+f_and, f_or, f_xor = [(lambda op: (lambda a, b: Node("", op.value, a, b)))(op) for op in [Ops.AND, Ops.OR, Ops.XOR]]
 
 
 def sol1(ci, replacement_pairs = None):
     replacement_pairs = replacement_pairs or []
-    replacements = {
-        (b if reverse else a): (a if reverse else b) for a, b in replacement_pairs for reverse in [True, False]
-    }
-    values, operations, key_to_operations = load(ci)
+    replacements = {(b if rev else a): (a if rev else b) for a, b in replacement_pairs for rev in [True, False]}
+    values, operations = load(ci)
     operations = [[*op[:3], replacements.get(op[3], op[3])] for op in operations]
     operations_by_result = {op[3]: op for op in operations}
     ends = sorted(op[3] for op in operations if op[3][0] == "z")
-    def make_node_from_op_name(op_name, r=None, traversed=None):
-        op_name = op_name if not r or op_name not in r else [o for o in r if o != op_name][0]
-        if traversed and op_name in traversed: return "ONO"  # cheese to keep consistent with existing code
-        traversed = [*traversed, op_name] if traversed else [op_name]  # in case we explored a created loop
-        op = operations_by_result.get(op_name, None)
-        if op is None: return op_name
-        return Node(op[3], op[0], *(make_node_from_op_name(op[ci], r, traversed) for ci in [1, 2]))
-    assert make_node_from_op_name(ends[0]) == make_xor("x00", "y00")
-    assert make_node_from_op_name(ends[1]) == make_xor(make_xor("x01", "y01"), make_and("x00", "y00"))
-    carry = make_and("x00", "y00")
-    make_carry = lambda prev, cid: Node("", Ops.OR.value,
-        make_and(*(f"{l}{str(cid-1).zfill(2)}" for l in ["x", "y"])),
-        make_and(make_xor(*(f"{l}{str(cid-1).zfill(2)}" for l in ["x", "y"])), prev),
-    )
+
+    def make_node_from_name(name, r=[], traversed=[]):  # Bad but won't mutate those optionals
+        name = name if name not in r else [o for o in r if o != name][0]
+        if traversed and name in traversed: return "ONO"  # cheese to keep consistent with existing code
+        op = operations_by_result.get(name, None)
+        if op is None: return name
+        return Node(op[3], op[0], *(make_node_from_name(op[ci], r, [*traversed, name]) for ci in [1, 2]))
+
+    assert make_node_from_name(ends[0]) == f_xor("x00", "y00")
+    assert make_node_from_name(ends[1]) == f_xor(f_xor("x01", "y01"), f_and("x00", "y00"))
+    carry = f_and("x00", "y00")
+    nx, ny = (lambda i: f"x{str(i).zfill(2)}"), (lambda i: f"y{str(i).zfill(2)}")
+    make_carry = lambda prev, cid: Node("", Ops.OR.value, f_and(nx(i-1), ny(i-1)), f_and(f_xor(nx(i-1), ny(i-1)), prev))
     for i in range(2, len(ends)):
         carry = make_carry(carry, i)
-        parsed_node = make_node_from_op_name(ends[i])
-        computed_node = (
-            make_xor(make_xor(*(f"{l}{str(i).zfill(2)}" for l in ["x", "y"])), carry)
-            if i < len(ends) - 1
-            else carry
-        )
-        discs = parsed_node.find_discrepancies(computed_node)
-        if len(discs) > 1: raise Exception("won't handle multiple discs detected for now")
-        if len(discs) == 1:
-            already_handled = [x for a, b in replacement_pairs for x in [a, b]]
-            if discs[0] in already_handled: raise Exception("change already handled")
-            for op in [o for o in operations_by_result if o not in [*already_handled, discs[0]]]:
-                if make_node_from_op_name(ends[i], r=[discs[0], op]) == computed_node:
-                    return sol1(ci, [*replacement_pairs, (discs[0], op)])
-            raise Exception("No dual found")
+        parsed_node = make_node_from_name(ends[i])
+        computed_node = f_xor(f_xor(nx(i), ny(i)), carry) if i < len(ends) - 1 else carry
+        disc = parsed_node.find_discrepancies(computed_node)
+        if not disc:  continue
+        if disc in replacements: raise Exception("Change already handled")
+        for op in [o for o in operations_by_result if o not in [*replacements, disc]]:
+            if make_node_from_name(ends[i], r=[disc, op]) == computed_node:
+                return sol1(ci, [*replacement_pairs, (disc, op)])
+        raise Exception("No dual found")
     return ",".join(sorted(v for a, b in replacement_pairs for v in [a, b]))
 
 
@@ -155,6 +117,6 @@ try:
         ri = f.read()[:-1]
 except FileNotFoundError:
     print("Wainting for input.")
-    ri = []
+    exit(-4)
 print(sol0(ri))
 print(sol1(ri))
