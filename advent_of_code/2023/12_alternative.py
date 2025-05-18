@@ -1,5 +1,9 @@
-#!/usr/bin/env python
-# https://adventofcode.com/2023/day/12
+# Copyright (c) c4ffein
+# Check https://github.com/c4ffein/puzzles/blob/main/LICENSE for license
+# Check https://github.com/c4ffein/puzzles/blob/main/README.md before judging code quality
+
+
+# Tried to solve mainly with lambdas and oneliners, just for fun
 
 
 from functools import reduce
