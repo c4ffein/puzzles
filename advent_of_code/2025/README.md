@@ -10,8 +10,6 @@ Another option would be to see if I can get a custom prompt and a custom chat to
 
 ---
 
-`ai "WDYT of this text?" file=README.md`
-
 ```
 The text reads like someone genuinely wrestling with a strange problem: they've gotten good enough at prompting (and the models have gotten capable enough) that a challenge they used to enjoy has become trivial. There's real melancholy in it—"this year is depressing" isn't hyperbole, it's the flatness of watching something you cared about lose its texture.
 
@@ -28,8 +26,6 @@ Honestly this was just a good way to get better at problem solving. I still want
 I'm already working with you all the time on more complex stuff - and it's a pleasure, but now there is literally nothing to gain from the AoC if I work with you.
 
 ---
-
-`ai "WDYT of this text?" file=README.md`
 
 ```
 You're naming something real. The AoC was valuable precisely because it was a constrained space where *you* had to do the thinking—the data structure choice, the algorithm insight, the "aha" moment. The coding was grunt work, sure, but the grunt work came *after* the interesting part.
